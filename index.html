@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>coDrawAgents | Project Page</title>
+  <meta name="description" content="coDrawAgents: A Multi-Agent Dialogue Framework for Compositional Image Generation" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400&family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="bg-grid"></div>
+  <header class="topbar">
+    <div class="container nav">
+      <div class="brand">coDrawAgents</div>
+      <nav>
+        <a href="#overview">Overview</a>
+        <a href="#method">Method</a>
+        <a href="#results">Results</a>
+        <a href="#citation">Citation</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="container hero-inner">
+      <p class="badge">CVPR 2026 Findings</p>
+      <h1>coDrawAgents: A Multi-Agent Dialogue Framework for Compositional Image Generation</h1>
+      <p class="authors">
+        Chunhan Li, Qifeng Wu, Jia-Hui Pan, Ka-Hei Hui, Jingyu Hu, Yuming Jiang, Bin Sheng,
+        Xihui Liu, Wenjuan Gong, Zhengzhe Liu
+      </p>
+      <p class="affiliations">
+        Lingnan University · Carnegie Mellon University · The Chinese University of Hong Kong ·
+        Alibaba DAMO Academy · Shanghai Jiao Tong University · The University of Hong Kong ·
+        China University of Petroleum (East China)
+      </p>
+
+      <div class="cta-row">
+        <a class="btn primary" href="assets/coDrawAgents_paper.pdf" target="_blank" rel="noopener">Paper</a>
+        <a class="btn" href="https://github.com/ChunhanLiii/coDrawAgents" target="_blank" rel="noopener">Code</a>
+        <a class="btn" href="#citation">BibTeX</a>
+        <a class="btn disabled" href="javascript:void(0)">ArXiv / Demo Soon</a>
+      </div>
+
+      <figure class="hero-figure">
+        <img src="assets/figure1_overview.png" alt="Overview of coDrawAgents multi-agent framework" />
+        <figcaption>
+          coDrawAgents uses four specialized agents — <strong>Interpreter</strong>,
+          <strong>Planner</strong>, <strong>Checker</strong>, and <strong>Painter</strong> —
+          to perform closed-loop, visually grounded compositional generation.
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section id="overview" class="section">
+    <div class="container narrow">
+      <h2>Abstract</h2>
+      <p class="lead">
+        Text-to-image generation has advanced rapidly, but existing models still struggle with
+        faithfully composing multiple objects and preserving their attributes in complex scenes.
+        coDrawAgents introduces an interactive multi-agent dialogue framework that adaptively switches
+        between a direct text-to-image pathway and a layout-aware generation process. In the
+        layout-aware mode, the framework decomposes the prompt into attribute-rich instances,
+        incrementally plans layouts with visual grounding, explicitly checks for spatial and semantic
+        errors, and synthesizes the image step by step.
+      </p>
+
+      <div class="stats">
+        <div class="stat">
+          <span class="stat-value">0.94</span>
+          <span class="stat-label">GenEval Overall</span>
+        </div>
+        <div class="stat">
+          <span class="stat-value">85.17</span>
+          <span class="stat-label">DPG-Bench Overall</span>
+        </div>
+        <div class="stat">
+          <span class="stat-value">4</span>
+          <span class="stat-label">Specialized Agents</span>
+        </div>
+      </div>
+
+      <div class="cards three">
+        <article class="card">
+          <h3>Divide-and-conquer planning</h3>
+          <p>
+            Instead of globally planning all objects at once, coDrawAgents groups objects by semantic
+            priority and incrementally reasons about each round, reducing layout complexity.
+          </p>
+        </article>
+        <article class="card">
+          <h3>Visual grounding</h3>
+          <p>
+            The Planner uses the evolving canvas and grounding information to place new objects in
+            context, avoiding isolated text-only spatial reasoning.
+          </p>
+        </article>
+        <article class="card">
+          <h3>Explicit correction</h3>
+          <p>
+            The Checker validates size, scale, placement, and cross-object consistency, then refines
+            layouts before rendering.
+          </p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="method" class="section alt">
+    <div class="container">
+      <h2>Method</h2>
+      <div class="cards four">
+        <article class="card">
+          <div class="pill">1</div>
+          <h3>Interpreter</h3>
+          <p>
+            Decides whether to use a layout-free or layout-aware pathway, decomposes prompts into
+            attribute-rich object descriptions, ranks semantic salience, and schedules generation rounds.
+          </p>
+        </article>
+        <article class="card">
+          <div class="pill">2</div>
+          <h3>Planner</h3>
+          <p>
+            Applies a Visual Spatial Chain-of-Thought to analyze the canvas state, reason about context,
+            and enforce physical plausibility when proposing layouts.
+          </p>
+        </article>
+        <article class="card">
+          <div class="pill">3</div>
+          <h3>Checker</h3>
+          <p>
+            Performs check-then-refine validation at both object and global levels, correcting overlaps,
+            scale drift, and relation inconsistencies across iterations.
+          </p>
+        </article>
+        <article class="card">
+          <div class="pill">4</div>
+          <h3>Painter</h3>
+          <p>
+            Supports both layout-free text-to-image generation and layout-aware rendering, building the
+            scene incrementally so later steps benefit from richer visual context.
+          </p>
+        </article>
+      </div>
+
+      <div class="figure-grid">
+        <figure class="wide">
+          <img src="assets/figure6_prompts.png" alt="Prompt design for interpreter, planner and checker" />
+          <figcaption>Prompting design for the Interpreter, Planner, and Checker agents.</figcaption>
+        </figure>
+        <figure class="wide">
+          <img src="assets/figure2_results.png" alt="Representative generation examples from coDrawAgents" />
+          <figcaption>Representative generations across diverse scenes and prompt styles.</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <section id="results" class="section">
+    <div class="container">
+      <h2>Results</h2>
+
+      <div class="result-layout">
+        <div class="result-copy">
+          <h3>State-of-the-art compositional faithfulness</h3>
+          <p>
+            coDrawAgents achieves the best overall results on both GenEval and DPG-Bench, improving
+            text-image alignment, spatial accuracy, counting, and attribute binding in complex scenes.
+          </p>
+          <ul class="clean-list">
+            <li><strong>GenEval:</strong> 1.00 single-object, 0.96 two-object, 0.94 counting, 0.97 colors, 0.95 position, 0.81 color-attribute, 0.94 overall.</li>
+            <li><strong>DPG-Bench:</strong> 84.78 global, 90.15 entity, 87.55 attribute, 92.92 relation, 84.38 other, 85.17 overall.</li>
+            <li><strong>Efficiency:</strong> only 1.00 / 1.52 / 1.62 / 1.95 average calls to Interpreter / Planner / Checker / Painter per generation.</li>
+          </ul>
+        </div>
+        <figure class="result-figure">
+          <img src="assets/figure3_comparison.png" alt="Qualitative comparison to existing methods" />
+          <figcaption>Qualitative comparisons against strong recent baselines.</figcaption>
+        </figure>
+      </div>
+
+      <div class="figure-grid">
+        <figure class="wide">
+          <img src="assets/figure4_ablation.png" alt="Ablation study on layout-aware mode, visual context and checker" />
+          <figcaption>Ablation results showing the benefits of layout-aware planning, visual context, and explicit checking.</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="section alt">
+    <div class="container narrow">
+      <h2>Why it works</h2>
+      <div class="timeline">
+        <div class="timeline-item">
+          <span class="dot"></span>
+          <div>
+            <h3>Adaptive mode selection</h3>
+            <p>The Interpreter routes easy prompts to direct generation and reserves multi-agent reasoning for complex scenes.</p>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <span class="dot"></span>
+          <div>
+            <h3>Closed-loop reasoning</h3>
+            <p>Planning, checking, and painting continually inform one another instead of operating as a fixed one-shot pipeline.</p>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <span class="dot"></span>
+          <div>
+            <h3>Canvas-aware composition</h3>
+            <p>The evolving image acts as feedback, making future layout decisions more grounded and less error-prone.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="citation" class="section">
+    <div class="container narrow">
+      <h2>Citation</h2>
+      <pre class="bibtex"><code>@inproceedings{li2026codrawagents,
+  title     = {coDrawAgents: A Multi-Agent Dialogue Framework for Compositional Image Generation},
+  author    = {Li, Chunhan and Wu, Qifeng and Pan, Jia-Hui and Hui, Ka-Hei and Hu, Jingyu and Jiang, Yuming and Sheng, Bin and Liu, Xihui and Gong, Wenjuan and Liu, Zhengzhe},
+  booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition},
+  year      = {2026},
+  note      = {Findings}
+}</code></pre>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <p>Project page template prepared for coDrawAgents.</p>
+      <p>Edit links in <code>index.html</code> to add arXiv, video, dataset, or your final camera-ready PDF.</p>
+    </div>
+  </footer>
+</body>
+</html>
