@@ -19,7 +19,6 @@
         <a href="#overview">Overview</a>
         <a href="#method">Method</a>
         <a href="#results">Results</a>
-        <a href="#citation">Citation</a>
       </nav>
     </div>
   </header>
@@ -41,8 +40,7 @@
       <div class="cta-row">
         <a class="btn primary" href="assets/coDrawAgents_paper.pdf" target="_blank" rel="noopener">Paper</a>
         <a class="btn" href="https://github.com/ChunhanLiii/coDrawAgents" target="_blank" rel="noopener">Code</a>
-        <a class="btn" href="#citation">BibTeX</a>
-        <a class="btn disabled" href="javascript:void(0)">ArXiv / Demo Soon</a>
+        <a class="btn" href="https://arxiv.org/html/2603.12829v1" target="_blank" rel="noopener">arXiv</a>
       </div>
 
       <figure class="hero-figure">
@@ -60,59 +58,23 @@
     <div class="container narrow">
       <h2>Abstract</h2>
       <p class="lead">
-        Text-to-image generation has advanced rapidly, but existing models still struggle with
-        faithfully composing multiple objects and preserving their attributes in complex scenes.
-        coDrawAgents introduces an interactive multi-agent dialogue framework that adaptively switches
-        between a direct text-to-image pathway and a layout-aware generation process. In the
-        layout-aware mode, the framework decomposes the prompt into attribute-rich instances,
-        incrementally plans layouts with visual grounding, explicitly checks for spatial and semantic
-        errors, and synthesizes the image step by step.
+        Text-to-image generation has advanced rapidly, but existing models still struggle with faithfully composing multiple objects and preserving their attributes in complex scenes. We propose coDrawAgents, an interactive multi-agent dialogue framework with four specialized agents: Interpreter, Planner, Checker, and Painter that collaborate to improve compositional generation. The Interpreter adaptively decides between a direct text-to-image pathway and a layout-aware multi-agent process. In the layout-aware mode, it parses the prompt into attribute-rich object descriptors, ranks them by semantic salience, and groups objects with the same semantic priority level for joint generation. 
+        Guided by the Interpreter, the Planner adopts a divide-and-conquer strategy, incrementally proposing layouts for objects with the same semantic priority level while grounding decisions in the evolving visual context of the canvas.
+        The Checker introduces an explicit error-correction mechanism by validating spatial consistency and attribute alignment, and refining layouts before they are rendered. 
+        Finally, the Painter synthesizes the image step by step, incorporating newly planned objects into the canvas to provide richer context for subsequent iterations. Together, these agents address three key challenges: reducing layout complexity, grounding planning in visual context, and enabling explicit error correction. Extensive experiments on benchmarks GenEval and DPG-Bench demonstrate that coDrawAgents substantially improves text–image alignment, spatial accuracy, and attribute binding compared to existing methods.
       </p>
-
-      <div class="stats">
-        <div class="stat">
-          <span class="stat-value">0.94</span>
-          <span class="stat-label">GenEval Overall</span>
-        </div>
-        <div class="stat">
-          <span class="stat-value">85.17</span>
-          <span class="stat-label">DPG-Bench Overall</span>
-        </div>
-        <div class="stat">
-          <span class="stat-value">4</span>
-          <span class="stat-label">Specialized Agents</span>
-        </div>
-      </div>
-
-      <div class="cards three">
-        <article class="card">
-          <h3>Divide-and-conquer planning</h3>
-          <p>
-            Instead of globally planning all objects at once, coDrawAgents groups objects by semantic
-            priority and incrementally reasons about each round, reducing layout complexity.
-          </p>
-        </article>
-        <article class="card">
-          <h3>Visual grounding</h3>
-          <p>
-            The Planner uses the evolving canvas and grounding information to place new objects in
-            context, avoiding isolated text-only spatial reasoning.
-          </p>
-        </article>
-        <article class="card">
-          <h3>Explicit correction</h3>
-          <p>
-            The Checker validates size, scale, placement, and cross-object consistency, then refines
-            layouts before rendering.
-          </p>
-        </article>
-      </div>
     </div>
   </section>
 
   <section id="method" class="section alt">
     <div class="container">
       <h2>Method</h2>
+      <div class="table-card">
+        <h3>🤖 Multi-Agent Collaboration</h3>
+        <p class="table-caption">
+          To improve the generality of our approach, covering both general text-to-image cases without explicit layouts and more complex cases requiring layout planning, the <span class="codraw-highlight">Interpreter</span> decides whether to enter the <em>layout-free</em> or the <em>layout-aware</em> mode.
+        </p>
+      </div>
       <div class="cards four">
         <article class="card">
           <div class="pill">1</div>
@@ -134,7 +96,7 @@
           <div class="pill">3</div>
           <h3>Checker</h3>
           <p>
-            Performs check-then-refine validation at both object and global levels, correcting overlaps,
+            Performs check-then-refine  at both object and global levels, correcting overlaps,
             scale drift, and relation inconsistencies across iterations.
           </p>
         </article>
@@ -165,23 +127,96 @@
     <div class="container">
       <h2>Results</h2>
 
-      <div class="result-layout">
-        <div class="result-copy">
-          <h3>State-of-the-art compositional faithfulness</h3>
-          <p>
-            coDrawAgents achieves the best overall results on both GenEval and DPG-Bench, improving
-            text-image alignment, spatial accuracy, counting, and attribute binding in complex scenes.
-          </p>
-          <ul class="clean-list">
-            <li><strong>GenEval:</strong> 1.00 single-object, 0.96 two-object, 0.94 counting, 0.97 colors, 0.95 position, 0.81 color-attribute, 0.94 overall.</li>
-            <li><strong>DPG-Bench:</strong> 84.78 global, 90.15 entity, 87.55 attribute, 92.92 relation, 84.38 other, 85.17 overall.</li>
-            <li><strong>Efficiency:</strong> only 1.00 / 1.52 / 1.62 / 1.95 average calls to Interpreter / Planner / Checker / Painter per generation.</li>
-          </ul>
+      <div class="table-card">
+        <h3>GenEval</h3>
+        <div class="table-wrap">
+          <table class="perf-table">
+            <thead>
+              <tr>
+                <th>Model</th>
+                <th>Single Obj.</th>
+                <th>Two Obj.</th>
+                <th>Counting</th>
+                <th>Colors</th>
+                <th>Position</th>
+                <th>Color Attri.</th>
+                <th>Overall↑</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>PixArt-Σ</td><td>0.98</td><td>0.50</td><td>0.44</td><td>0.80</td><td>0.08</td><td>0.07</td><td>0.48</td></tr>
+              <tr><td>Emu3-Gen</td><td>0.98</td><td>0.71</td><td>0.34</td><td>0.81</td><td>0.17</td><td>0.21</td><td>0.54</td></tr>
+              <tr><td>SDXL</td><td>0.98</td><td>0.74</td><td>0.39</td><td>0.85</td><td>0.15</td><td>0.23</td><td>0.55</td></tr>
+              <tr><td>GoT</td><td>0.99</td><td>0.69</td><td>0.67</td><td>0.85</td><td>0.34</td><td>0.27</td><td>0.64</td></tr>
+              <tr><td>DALL-E 3</td><td>0.96</td><td>0.87</td><td>0.47</td><td>0.83</td><td>0.43</td><td>0.45</td><td>0.67</td></tr>
+              <tr><td>FLUX.1-dev</td><td>0.99</td><td>0.81</td><td>0.79</td><td>0.74</td><td>0.20</td><td>0.47</td><td>0.67</td></tr>
+              <tr><td>Janus-Pro-1B</td><td>0.98</td><td>0.82</td><td>0.51</td><td>0.89</td><td>0.65</td><td>0.56</td><td>0.73</td></tr>
+              <tr><td>SD3-Medium</td><td>0.99</td><td>0.94</td><td>0.72</td><td>0.89</td><td>0.33</td><td>0.60</td><td>0.74</td></tr>
+              <tr><td>TokenFlow-XL</td><td>0.95</td><td>0.60</td><td>0.41</td><td>0.81</td><td>0.16</td><td>0.24</td><td>0.55</td></tr>
+              <tr><td>UniWorld-V1</td><td>0.99</td><td>0.93</td><td>0.79</td><td>0.89</td><td>0.49</td><td>0.70</td><td>0.80</td></tr>
+              <tr><td>GPT Image 1 [High]</td><td>0.99</td><td>0.92</td><td>0.85</td><td>0.92</td><td>0.75</td><td>0.61</td><td>0.84</td></tr>
+              <tr class="highlight-row"><td><strong>coDrawAgents (Ours)</strong></td><td><strong>1.00</strong></td><td><strong>0.96</strong></td><td><strong>0.94</strong></td><td><strong>0.97</strong></td><td><strong>0.95</strong></td><td><strong>0.81</strong></td><td><strong>0.94</strong></td></tr>
+            </tbody>
+          </table>
         </div>
-        <figure class="result-figure">
-          <img src="assets/figure3_comparison.png" alt="Qualitative comparison to existing methods" />
-          <figcaption>Qualitative comparisons against strong recent baselines.</figcaption>
-        </figure>
+      </div>
+
+      <div class="table-card">
+        <h3>DPG-Bench</h3>
+        <div class="table-wrap">
+          <table class="perf-table">
+            <thead>
+              <tr>
+                <th>Model</th>
+                <th>Global</th>
+                <th>Entity</th>
+                <th>Attribute</th>
+                <th>Relation</th>
+                <th>Other</th>
+                <th>Overall↑</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>Hunyuan-DiT</td><td>84.59</td><td>80.59</td><td>88.01</td><td>74.36</td><td>86.41</td><td>78.87</td></tr>
+              <tr><td>PixArt-Σ</td><td>86.89</td><td>82.89</td><td>88.94</td><td>86.59</td><td>87.68</td><td>80.54</td></tr>
+              <tr><td>DALL-E 3</td><td>90.97</td><td>89.61</td><td>88.39</td><td>90.58</td><td>89.83</td><td>83.50</td></tr>
+              <tr><td>SD3-Medium</td><td>87.90</td><td>91.01</td><td>88.83</td><td>80.70</td><td>88.68</td><td>84.08</td></tr>
+              <tr><td>FLUX.1-dev</td><td>74.35</td><td>90.00</td><td>88.96</td><td>90.87</td><td>88.33</td><td>83.84</td></tr>
+              <tr><td>GoT</td><td>83.58</td><td>82.16</td><td>80.07</td><td>87.81</td><td>65.25</td><td>73.53</td></tr>
+              <tr><td>T2I-Copilot</td><td>87.50</td><td>81.74</td><td>81.07</td><td>86.94</td><td>48.28</td><td>74.34</td></tr>
+              <tr><td>OmniGen2</td><td>88.81</td><td>88.83</td><td>90.18</td><td>89.37</td><td>90.27</td><td>83.57</td></tr>
+              <tr><td>Emu3-Gen</td><td>85.21</td><td>86.68</td><td>86.84</td><td>90.22</td><td>83.15</td><td>80.60</td></tr>
+              <tr><td>UniWorld-V1</td><td>83.64</td><td>88.39</td><td>88.44</td><td>89.27</td><td>87.22</td><td>81.38</td></tr>
+              <tr><td>BLIP3-o 8B</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>81.60</td></tr>
+              <tr class="highlight-row"><td><strong>coDrawAgents (Ours)</strong></td><td>84.78</td><td>90.15</td><td>87.55</td><td>92.92</td><td>84.38</td><td><strong>85.17</strong></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="table-card">
+        <h3>Ablation on DPG-Bench</h3>
+        <div class="table-wrap">
+          <table class="perf-table">
+            <thead>
+              <tr>
+                <th>Model</th>
+                <th>Global</th>
+                <th>Entity</th>
+                <th>Attribute</th>
+                <th>Relation</th>
+                <th>Other</th>
+                <th>Overall↑</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>Layout-free mode</td><td>84.50</td><td>84.44</td><td>86.15</td><td>90.87</td><td>75.60</td><td>77.60</td></tr>
+              <tr><td>+ Layout-aware mode</td><td>79.94</td><td>89.32</td><td>87.27</td><td>92.37</td><td>80.65</td><td>82.61</td></tr>
+              <tr><td>+ Visual context</td><td>88.89</td><td>88.72</td><td>89.32</td><td>95.95</td><td>66.67</td><td>84.51</td></tr>
+              <tr class="highlight-row"><td><strong>+ Checker (coDrawAgents)</strong></td><td>84.78</td><td>90.15</td><td>87.55</td><td>92.92</td><td>84.38</td><td><strong>85.17</strong></td></tr>
+            </tbody>
+          </table>
+        </div>
       </div>
 
       <div class="figure-grid">
@@ -190,48 +225,6 @@
           <figcaption>Ablation results showing the benefits of layout-aware planning, visual context, and explicit checking.</figcaption>
         </figure>
       </div>
-    </div>
-  </section>
-
-  <section class="section alt">
-    <div class="container narrow">
-      <h2>Why it works</h2>
-      <div class="timeline">
-        <div class="timeline-item">
-          <span class="dot"></span>
-          <div>
-            <h3>Adaptive mode selection</h3>
-            <p>The Interpreter routes easy prompts to direct generation and reserves multi-agent reasoning for complex scenes.</p>
-          </div>
-        </div>
-        <div class="timeline-item">
-          <span class="dot"></span>
-          <div>
-            <h3>Closed-loop reasoning</h3>
-            <p>Planning, checking, and painting continually inform one another instead of operating as a fixed one-shot pipeline.</p>
-          </div>
-        </div>
-        <div class="timeline-item">
-          <span class="dot"></span>
-          <div>
-            <h3>Canvas-aware composition</h3>
-            <p>The evolving image acts as feedback, making future layout decisions more grounded and less error-prone.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section id="citation" class="section">
-    <div class="container narrow">
-      <h2>Citation</h2>
-      <pre class="bibtex"><code>@inproceedings{li2026codrawagents,
-  title     = {coDrawAgents: A Multi-Agent Dialogue Framework for Compositional Image Generation},
-  author    = {Li, Chunhan and Wu, Qifeng and Pan, Jia-Hui and Hui, Ka-Hei and Hu, Jingyu and Jiang, Yuming and Sheng, Bin and Liu, Xihui and Gong, Wenjuan and Liu, Zhengzhe},
-  booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition},
-  year      = {2026},
-  note      = {Findings}
-}</code></pre>
     </div>
   </section>
 

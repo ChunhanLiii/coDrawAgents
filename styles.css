@@ -158,7 +158,8 @@ h1{
   margin:0 auto;
 }
 .hero-figure img,.wide img,.result-figure img{
-  width:100%; 
+  width:80%;
+  margin:0 auto;
   border-radius:6px; 
   display:block;
   border:1px solid var(--line);
@@ -283,27 +284,63 @@ h3{
   gap:24px; 
   margin-top:28px;
 }
-.result-layout{
-  display:grid; 
-  grid-template-columns:1fr 1.15fr; 
-  gap:24px; 
-  align-items:start;
+.table-card{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:var(--radius-large);
+  padding:28px;
+  box-shadow:var(--shadow);
   margin-top:24px;
 }
-.result-copy{
-  background:var(--card); 
-  border:1px solid var(--line); 
-  border-radius:var(--radius-large); 
-  padding:28px; 
-  box-shadow:var(--shadow);
-}
-.result-copy p{
-  line-height:1.8;
+.table-caption{
+  margin:6px 0 16px;
+  color:var(--muted);
+  font-size:.95rem;
+  line-height:1.6;
   text-align:justify;
-  margin-bottom:16px;
 }
-.result-copy p:last-child{
-  margin-bottom:0;
+.table-wrap{
+  overflow:auto;
+  -webkit-overflow-scrolling:touch;
+  border:1px solid var(--line);
+  border-radius:10px;
+  background:#fff;
+}
+.perf-table{
+  width:100%;
+  border-collapse:collapse;
+  min-width:860px;
+}
+.perf-table th,.perf-table td{
+  padding:10px 12px;
+  border-bottom:1px solid var(--line);
+  text-align:center;
+  vertical-align:middle;
+  font-size:.95rem;
+  line-height:1.4;
+  white-space:nowrap;
+}
+.perf-table th{
+  position:sticky;
+  top:0;
+  background:rgba(250,250,250,.98);
+  z-index:1;
+  font-weight:700;
+  color:var(--primary);
+}
+.perf-table td:first-child,.perf-table th:first-child{
+  text-align:left;
+  white-space:normal;
+  min-width:220px;
+}
+.perf-table tbody tr:nth-child(even){
+  background:rgba(26,77,140,.04);
+}
+.perf-table .highlight-row{
+  background:rgba(196,30,58,.08) !important;
+}
+.perf-table .highlight-row td{
+  border-bottom:1px solid rgba(196,30,58,.25);
 }
 .clean-list{
   padding-left:24px; 
@@ -402,6 +439,7 @@ code{
   nav a{margin-left:16px; font-size:.9rem}
   .container{width:calc(100% - 32px)}
   .narrow{width:calc(100% - 32px)}
+  .perf-table{min-width:760px}
 }
 @media (max-width: 700px){
   .nav{flex-direction:column; gap:12px; align-items:center}
@@ -413,4 +451,5 @@ code{
   .stat-value{font-size:2rem}
   h2{font-size:1.5rem}
   h1{font-size:1.6rem}
+  .hero-figure img,.wide img,.result-figure img{width:100%}
 }
